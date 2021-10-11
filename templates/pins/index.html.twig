@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pinterest{% endblock %}
+
+{% block body %}
+<h1>{{ pluralize(pins|length, 'Pin') }}</h1>
+
+    {% for pin in pins %}
+    <article>
+        <h2><a href="{{ path('app_pin_show', {id: pin.id}) }}">{{  pin.title}}</a></h2>
+        <p>{{  pin.description}}</p>
+    </article>
+    {% endfor %}
+
+{% endblock %}
