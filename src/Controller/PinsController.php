@@ -94,7 +94,7 @@ class PinsController extends AbstractController
     {
         if ($this -> isCsrfTokenValid('pins_deletion_' . $pin-> getId(), $request->request->get('csrf_token'))){
             $em -> remove($pin);
-            $em -> flush();
+            $em -> flush(); 
         }
         return $this->redirectToRoute("app_home");
     }
