@@ -53,7 +53,7 @@ class PinsController extends AbstractController
     }
 
     /**
-     * @Route("/pins/{id<[1-9]+>}", name="app_pin_show", methods="GET")
+     * @Route("/pins/{id<[0-9]+>}", name="app_pin_show", methods="GET")
      */
 
     public function show(Pin  $pin): Response
@@ -62,7 +62,7 @@ class PinsController extends AbstractController
     }
 
     /**
-     * @Route("/pins/{id<[0-9]+>}/edit", name="app_pins_edit", methods="GET", "PUT")
+     * @Route("/pins/{id<[0-9]+>}/edit", name="app_pins_edit", methods="GET|PUT")
      */
 
     public function edit(Pin  $pin, Request $request, EntityManagerInterface $em): Response
@@ -87,14 +87,14 @@ class PinsController extends AbstractController
     }
 
     /**
-     * @Route("/pins/{id<[0-9]+>}", name="app_pins_delete", methods="DELETE")
+     * @Route("/pins/{id<[0-9]+>}/delete", name="app_pins_delete", methods="DELETE")
      */
 
     public function delete(Request $request, Pin  $pin, EntityManagerInterface $em): Response
     {
-        if ($this -> isCsrfTokenValid('pins_deletion_' . $pin-> getId(), $request->request->get('csrf_token'))){
+        if ($this -> isCsrfTokenValid('pins_deletion_' . $pin-> getId(), $request->request->get('csrf_token'))){ // fonction heritée depuis le controller
             $em -> remove($pin);
-            $em -> flush(); 
+            $em -> flush();
         }
         return $this->redirectToRoute("app_home");
     }
