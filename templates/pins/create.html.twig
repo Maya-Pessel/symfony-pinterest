@@ -3,8 +3,14 @@
 {% block title %}Pinterest{% endblock %}
 
 {% block body %}
-    <h1>Create Pin</h1>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
 
-    {{ include('pins/_form.html.twig') }}
+            <h1>Create Pin</h1>
+
+            {{ include('pins/_form.html.twig') }}
+
+        </div>
+    </div>
 
 {% endblock %}
