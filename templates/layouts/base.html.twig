@@ -12,8 +12,33 @@
         {% block javascripts %}
             {#{{ encore_entry_script_tags('app') }}#}
         {% endblock %}
+
+        <style>
+
+            .alert{
+                padding: 10px;
+                 color: white;
+                text-align: center;
+            }
+            .alert-success{
+                background-color: #52bb7c;
+            }
+
+            .alert-error{
+                background-color: #bb525b;
+            }
+
+            .alert-info{
+                background-color: #5278bb;
+            }
+
+        </style>
     </head>
     <body>
+
+    {{ include('layouts/partials/_flash_message.html.twig') }}
+
+
     <nav>
         <ul>
             <li><a href="{{ path("app_home") }}">Home</a></li>
