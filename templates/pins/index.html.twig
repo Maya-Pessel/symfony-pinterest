@@ -14,9 +14,9 @@
                     <div class="col-md-4">
                         <article class="pin bg-white rounded shadow">
 
-                            <div class="mw-100 overflow-hidden">
+                            <div class="mw-100 overflow-hidden rounded-top">
                                 <a href="{{ path('app_pin_show', {id: pin.id}) }}">
-                                    <img class="w-100 rounded-top" src="{{ (pin.imageName ? vich_uploader_asset(pin): asset('build/images/placeholder.png'))|imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}">
+                                    <img class="w-100" src="{{ (pin.imageName ? vich_uploader_asset(pin): asset('build/images/placeholder.png'))|imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}">
                                 </a>
                             </div>
                             <h2 class="h5 ps-3 pt-3"><a class="text-decoration-none link-secondary" href="{{ path('app_pin_show', {id: pin.id}) }}">{{pin.title}}</a></h2>
