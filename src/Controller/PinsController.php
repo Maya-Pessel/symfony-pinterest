@@ -6,6 +6,7 @@ use App\Entity\Pin;
 use App\Form\PinType;
 use App\Repository\PinRepository;
 // use http\Client\Request;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +32,7 @@ class PinsController extends AbstractController
      * @Route("/pins/create", name="app_pins_create", methods="GET|POST")
      */
 
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em, UserRepository $userRepo ): Response
     {
         $pin = new Pin;
 
@@ -41,6 +42,8 @@ class PinsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+            $jojoJo = $userRepo-> findOneBy(['email' => 'jojo.jo@exemple.fr']);
+            $pin -> setUser($jojoJo);
             $em->persist($pin);
             $em->flush();
 
