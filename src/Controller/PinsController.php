@@ -15,9 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 class PinsController extends AbstractController
 {
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     /**
      * @Route("/", name="app_home", methods="GET")
      */
@@ -42,8 +49,7 @@ class PinsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $jojoJo = $userRepo-> findOneBy(['email' => 'jojo.jo@exemple.fr']);
-            $pin -> setUser($jojoJo);
+            $pin -> setUser($this->security->getUser());
             $em->persist($pin);
             $em->flush();
 
@@ -73,6 +79,10 @@ class PinsController extends AbstractController
 
     public function edit(Pin  $pin, Request $request, EntityManagerInterface $em): Response
     {
+        if ($pin->getUser() !== $this->security->getUser()){
+            return $this->redirectToRoute("app_home");
+
+        }
         $form = $this -> createForm(PinType::class, $pin, [
             'method' => 'PUT'
         ]);
