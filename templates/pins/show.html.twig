@@ -13,59 +13,27 @@
                          <img class="w-100" src="{{ (pin.imageName ? vich_uploader_asset(pin): asset('build/images/placeholder.png'))|imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}">
                </div>
                <div class="p-3">
-
                     <div class="title-like">
                          <h1 class="h5">{{pin.title}}</h1>
                          {% if app.user%}
                          <div>
-                              <input type="checkbox" id="checkbox"/>
-                              <label for="checkbox">
-                                   <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
-                                        <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-                                             <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" />
-                                             <circle class="circle" cx="29.5" cy="29.5" r="1.5" stroke="#CD85E7" stroke-width="0 "/>
 
-                                             <g id="grp7" opacity="0" transform="translate(7 6)">
-                                                  <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
-                                                  <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp6" opacity="0" transform="translate(0 28)">
-                                                  <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
-                                                  <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp3" opacity="0" transform="translate(52 28)">
-                                                  <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
-                                                  <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp2" opacity="0" transform="translate(44 6)">
-                                                  <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
-                                                  <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp5" opacity="0" transform="translate(14 50)">
-                                                  <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
-                                                  <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp4" opacity="0" transform="translate(35 50)">
-                                                  <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
-                                                  <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
-                                             </g>
-
-                                             <g id="grp1" opacity="0" transform="translate(24)">
-                                                  <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
-                                                  <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
-                                             </g>
-                                        </g>
-                                   </svg>
-                                   {#                         <div class="numbers">#}
-                                   {#                              <a class="num1">14</a>#}
-                                   {#                              <a class="num2">15</a>#}
-                                   {#                         </div>#}
-                              </label>
+                             <div id="likes">
+                                 {% if app.user in pin.likes %}
+                                     <a href="{{ path('add_like', {id:pin.id}) }}" class="like">
+                                         <svg id="heart-icon-active" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                         </svg>
+                                     </a>
+                                 {% else %}
+                                     <a href="{{ path('add_like', {id:pin.id}) }}" class="like">
+                                         <svg id="heart-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                         </svg>
+                                     </a>
+                                 {% endif %}
+                                 <span>{{ pin.likes.count }}</span>
+                             </div>
                          </div>
                          {% endif %}
                     </div>

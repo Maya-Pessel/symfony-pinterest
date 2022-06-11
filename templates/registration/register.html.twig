@@ -2,7 +2,15 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}<br><br>
+            <a href="{{ path('app_logout') }}" class="btn btn-danger" >Logout</a>
+
+        </div>
+    {% endif %}
+    {% if  app.user == false %}
+        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
 
     {{ form_start(registrationForm) }}
     {{ form_row(registrationForm.first_name) }}
@@ -12,6 +20,8 @@
             label: 'Password'
         }) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn btn-lg btn-primary mt-2">Register</button>
     {{ form_end(registrationForm) }}
+    {% endif %}
+
 {% endblock %}

@@ -9,6 +9,7 @@ use App\Repository\PinRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,5 +118,31 @@ class PinsController extends AbstractController
 
         }
         return $this->redirectToRoute("app_home");
+    }
+
+    /**
+     * @Route("/pins/{id<[0-9]+>}/likes", name="add_like")
+     */
+    public function likes($id, Pin $pin): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // check si user est connecté
+
+        $user = $this->security->getUser();
+
+        if (!$user) return $this->redirectToRoute('app_home');
+
+        // ici la logique pour liker
+        if ($pin->getLikes()->contains($user)) {
+            $pin->removeLike($user);
+        } else {
+
+            $pin->addLike($user);
+        }
+        $entityManager->persist($pin);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_pin_show', ['id' => $pin->getId()]);
     }
 }

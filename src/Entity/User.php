@@ -59,9 +59,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $pins;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Pin::class, mappedBy="likes")
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->pins = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -207,6 +213,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($pin->getUser() === $this) {
                 $pin->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Pin[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Pin $like): self
+    {
+        dd("hhehe");
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->addLike($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Pin $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            $like->removeLike($this);
         }
 
         return $this;
