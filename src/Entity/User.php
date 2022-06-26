@@ -19,8 +19,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-     
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -64,10 +62,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PinComs::class, mappedBy="owner")
+     */
+    private $pinComs;
+
     public function __construct()
     {
         $this->pins = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->pinComs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,4 +249,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|PinComs[]
+     */
+    public function getPinComs(): Collection
+    {
+        return $this->pinComs;
+    }
+
+    public function addPinCom(PinComs $pinCom): self
+    {
+        if (!$this->pinComs->contains($pinCom)) {
+            $this->pinComs[] = $pinCom;
+            $pinCom->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePinCom(PinComs $pinCom): self
+    {
+        if ($this->pinComs->removeElement($pinCom)) {
+            // set the owning side to null (unless already changed)
+            if ($pinCom->getOwner() === $this) {
+                $pinCom->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

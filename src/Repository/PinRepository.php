@@ -19,32 +19,15 @@ class PinRepository extends ServiceEntityRepository
         parent::__construct($registry, Pin::class);
     }
 
-    // /**
-    //  * @return Pin[] Returns an array of Pin objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findSortedByLikes()
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+        return $likes = $this->createQueryBuilder('a')
+            ->select('COUNT(u) AS HIDDEN nbrLikes', 'a')
+            ->leftJoin('a.likes', 'u')
+            ->orderBy('nbrLikes', 'DESC')
+            ->groupBy('a')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Pin
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

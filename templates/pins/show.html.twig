@@ -38,7 +38,7 @@
                          {% endif %}
                     </div>
                     <p class="text-muted">
-                         <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by {{pin.user.fullName}}</small>
+                         <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by <a href="">{{pin.user.fullName}}</a></small>
                     </p>
                     <p class="text-break">{{ pin.description}}</p>
 
@@ -50,6 +50,27 @@
                               <a href="#" onclick="event.preventDefault(); confirm('Are you sure ?') && document.getElementById('js-pin-delete-form').submit()" class="btn btn-light">Delete Pin</a>
                          {% endif %}
                     </div>
+                  <div>
+                      <hr>
+                      {{ form_start(comForm) }}
+                      {{ form_widget(comForm) }}
+                      <button class="px-5 py-2">
+                          {{ button_label|default('Save') }}
+                      </button>
+                      {{ form_end(comForm) }}
+                      {#<form class="form-inline">
+                          <div class="mb-2">
+                          </div>
+                          <div class="mb-2">
+                              <button type="submit" value="{{ submitButtonText|default('Create com') }}" formnovalidate class="btn btn-primary"></button>
+                          </div>
+                      </form>#}
+                      <hr>
+                      <p class="text-muted">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab alias aliquam, architecto cupiditate dolor eos exercitationem !<br>
+                          <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by <a href="">{{pin.user.fullName}}</a></small>
+                      </p>
+                  </div>
                </div>
           </article>
 

@@ -70,9 +70,15 @@ class Pin
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PinComs::class, mappedBy="pin", orphanRemoval=true)
+     */
+    private $pinComs;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->pinComs = new ArrayCollection();
     }
 
 
@@ -167,6 +173,30 @@ class Pin
     public function removeLike(User $like): self
     {
         $this->likes->removeElement($like);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getPinComs(): Collection
+    {
+        return $this->pin_coms;
+    }
+
+    public function addPinCom(User $pinCom): self
+    {
+        if (!$this->pin_coms->contains($pinCom)) {
+            $this->pin_coms[] = $pinCom;
+        }
+
+        return $this;
+    }
+
+    public function removePinCom(User $pinCom): self
+    {
+        $this->pin_coms->removeElement($pinCom);
 
         return $this;
     }

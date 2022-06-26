@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html.twig' %}
+{% set current_params = app.request.get('_route_params') %}
 
 {% block title %}Pinterest{% endblock %}
 
@@ -6,7 +7,16 @@
 
     {% if pins|length > 0 %}
         <h1 class="mb-4 text-center text-muted">{{ pluralize(pins|length, 'Pin') }}</h1>
+        <div id="filter" class="btn-group d-flex justify-content-center">
+            {% if "likes" not in current_params %}
+                <a class="btn btn-secondary mb-2" href="{{ path('app_home') }}#filter">Plus récents</a>
+                <a class="btn btn-secondary mb-2" href="{{ path('app_home', {'type': 'likes'}) }}#filter">Plus aimés</a>
+            {% else %}
+                <a class="btn btn-lg btn-secondary mb-2" href="{{ path('app_home') }}#filter">Plus récents</a>
+                <a class="btn btn-lg btn-secondary mb-2" href="{{ path('app_home', {'type': 'likes'}) }}#filter">Plus aimés</a>
+            {% endif %}
 
+        </div>
         {% for row in pins|batch(3) %}
             <div class="row mb-5">
 
@@ -19,9 +29,32 @@
                                     <img class="w-100" src="{{ (pin.imageName ? vich_uploader_asset(pin): asset('build/images/placeholder.png'))|imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}">
                                 </a>
                             </div>
-                            <h2 class="h5 ps-3 pt-3"><a class="text-decoration-none link-secondary" href="{{ path('app_pin_show', {id: pin.id}) }}">{{pin.title}}</a></h2>
+                            <div class="title-like">
+                                <h2 class="h5 ps-3 pt-3"><a class="text-decoration-none link-secondary" href="{{ path('app_pin_show', {id: pin.id}) }}">{{pin.title}}</a></h2>
+                                {% if app.user%}
+                                    <div class="margin">
+
+                                        <div id="likes">
+                                            {% if app.user in pin.likes %}
+                                                <a href="{{ path('add_like', {id:pin.id}) }}" class="like">
+                                                    <svg id="heart-icon-active" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                    </svg>
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ path('add_like', {id:pin.id}) }}" class="like">
+                                                    <svg id="heart-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                    </svg>
+                                                </a>
+                                            {% endif %}
+                                            <span>{{ pin.likes.count }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                             <!--<p>{{ pin.description|u.truncate(28, '...', false)}}</p>-->
-                            <p class="text-muted ps-3 pb-3"><small>Submitted by {{ pin.user.fullName}} il y a {{ pin.createdAt|ago}}</small></p>
+                            <p class="text-muted ps-3 pb-3"><small>Submitted by <a href="">{{ pin.user.fullName}}</a> il y a {{ pin.createdAt|ago}}</small></p>
                         </article>
                     </div>
                 {% endfor %}

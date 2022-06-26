@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Pin;
+use App\Entity\PinComs;
+use App\Entity\User;
+use App\Form\ComType;
 use App\Form\PinType;
 use App\Repository\PinRepository;
 // use http\Client\Request;
@@ -12,6 +15,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,19 +32,31 @@ class PinsController extends AbstractController
 
     /**
      * @Route("/", name="app_home", methods="GET")
+     * @Route("/order/{type}", name="home_ordered")
      */
-    public function index(PinRepository $pinRepository): Response
+    public function index($type = null): Response
     {
-        //dd($pinRepository->findAll());
-        $pins = $pinRepository->findBy([], ['created_at' => 'DESC']);
-        return $this->render('pins/index.html.twig', ['pins'=> $pins]);
+        if ($type == 'likes') {
+            $pins = $this->getDoctrine()
+                ->getRepository(Pin::class)
+                ->findSortedByLikes();
+        } else {
+            $pins = $this->getDoctrine()
+                ->getRepository(Pin::class)
+                ->findBy(array(), array('created_at' => 'DESC'));
+        }
+
+        return $this->render('pins/index.html.twig', [
+            'pins' => $pins
+        ]);
+
     }
 
     /**
      * @Route("/pins/create", name="app_pins_create", methods="GET|POST")
      */
 
-    public function create(Request $request, EntityManagerInterface $em, UserRepository $userRepo ): Response
+    public function create(Request $request, EntityManagerInterface $em): Response
     {
         $pin = new Pin;
 
@@ -65,12 +81,30 @@ class PinsController extends AbstractController
     }
 
     /**
-     * @Route("/pins/{id<[0-9]+>}", name="app_pin_show", methods="GET")
+     * @Route("/pins/{id<[0-9]+>}", name="app_pin_show", methods="GET|POST")
      */
 
-    public function show(Pin  $pin): Response
+    public function show(Pin  $pin, Request $request, EntityManagerInterface $em ): Response
     {
-    return $this->render('pins/show.html.twig', compact('pin'));
+        $com = new PinComs();
+
+        $comForm = $this->createForm(ComType::class, $com);
+        $comForm->handleRequest($request);
+
+        if ($comForm->isSubmitted() && $comForm->isValid()){
+            $com->setOwner($this->security->getUser());
+            $com->setPin($pin);
+            $em->persist($com);
+            $em->flush();
+
+            $this->addFlash('success', 'Commentary successfully created');
+            return $this->redirectToRoute("app_home");
+        }
+
+        return $this->render('pins/show.html.twig', [
+            'comForm' => $comForm->createView(),
+            'pin' => $pin
+        ]);
     }
 
 
@@ -123,8 +157,10 @@ class PinsController extends AbstractController
     /**
      * @Route("/pins/{id<[0-9]+>}/likes", name="add_like")
      */
-    public function likes($id, Pin $pin): Response
+    public function likes(Request $request, Pin $pin): Response
     {
+        $referer = $request->headers->get('referer');
+
         $entityManager = $this->getDoctrine()->getManager();
 
         // check si user est connecté
@@ -143,6 +179,8 @@ class PinsController extends AbstractController
         $entityManager->persist($pin);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_pin_show', ['id' => $pin->getId()]);
+        // return $this->redirectToRoute('app_pin_show', ['id' => $pin->getId()]);
+        return $this->redirect($referer);
     }
+
 }
