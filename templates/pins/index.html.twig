@@ -7,13 +7,13 @@
 
     {% if pins|length > 0 %}
         <h1 class="mb-4 text-center text-muted">{{ pluralize(pins|length, 'Pin') }}</h1>
-        <div id="filter" class="btn-group d-flex justify-content-center">
+        <div id="filter" class=" inline">
             {% if "likes" not in current_params %}
-                <a class="btn btn-secondary mb-2" href="{{ path('home_ordered') }}#filter">Plus récents</a>
-                <a class="btn btn-secondary mb-2" href="{{ path('home_ordered', {'type': 'likes'}) }}#filter">Most liked</a>
+                <a class="btn btn-lg btn-light mb-2" href="{{ path('home_ordered') }}#filter">Most recent</a>
+                <a class="btn btn-lg btn-light mb-2" href="{{ path('home_ordered', {'type': 'likes'}) }}#filter">Most liked</a>
             {% else %}
-                <a class="btn btn-lg btn-secondary mb-2" href="{{ path('home_ordered') }}#filter">Plus récents</a>
-                <a class="btn btn-lg btn-secondary mb-2" href="{{ path('home_ordered', {'type': 'likes'}) }}#filter">Plus aimés</a>
+                <a class="btn btn-lg btn-light mb-2" href="{{ path('home_ordered') }}#filter">Most recent</a>
+                <a class="btn btn-lg btn-light mb-2" href="{{ path('home_ordered', {'type': 'likes'}) }}#filter">Most liked</a>
             {% endif %}
 
         </div>
