@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html.twig' %}
+{% set current_params = app.request.get('_route_params') %}
+
+
+
+{% block body %}
+<title>Edit User</title>
+    <div class="text-center mb-4">
+        <h1 class="mb-4 text-center text-muted">Edit your profile</h1>
+        <a class="btn btn-light text-center" href="{{ path('user_show', {id:user.id}) }}">Back to your profile </a>
+    </div>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="">
+            {{ form_label(form.firstName) }}
+            {{ form_widget(form.firstName) }}
+
+            {{ form_label(form.lastName) }}
+            {{ form_widget(form.lastName) }}
+
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+
+            <div class="inline mt-3">
+                {{ form_label(form.Update) }}
+                {{ form_widget(form.Update) }}
+
+                <a class="btn btn-outline-danger" href="{{ 'user/_delete_form.html.twig' }}">Delete your account</a>
+            </div>
+    </div>
+</div>
+{% endblock %}

@@ -32,10 +32,11 @@ class PinsController extends AbstractController
 
     /**
      * @Route("/", name="app_home", methods="GET")
-     * @Route("/order/{type}", name="home_ordered")
+     * @Route("pin/{type}", name="home_ordered")
      */
     public function index($type = null): Response
     {
+
         if ($type == 'likes') {
             $pins = $this->getDoctrine()
                 ->getRepository(Pin::class)
@@ -86,6 +87,8 @@ class PinsController extends AbstractController
 
     public function show(Pin  $pin, Request $request, EntityManagerInterface $em ): Response
     {
+        $referer = $request->headers->get('referer');
+
         $com = new PinComs();
 
         $comForm = $this->createForm(ComType::class, $com);
@@ -96,11 +99,9 @@ class PinsController extends AbstractController
             $com->setPin($pin);
             $em->persist($com);
             $em->flush();
-
             $this->addFlash('success', 'Commentary successfully created');
-            return $this->redirectToRoute("app_home");
+            return $this->redirect($referer);
         }
-
         return $this->render('pins/show.html.twig', [
             'comForm' => $comForm->createView(),
             'pin' => $pin
@@ -182,5 +183,6 @@ class PinsController extends AbstractController
         // return $this->redirectToRoute('app_pin_show', ['id' => $pin->getId()]);
         return $this->redirect($referer);
     }
+
 
 }

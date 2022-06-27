@@ -38,7 +38,7 @@
                          {% endif %}
                     </div>
                     <p class="text-muted">
-                         <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by <a href="">{{pin.user.fullName}}</a></small>
+                         <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by <a href="{{ path('user_show', {id:pin.user.id}) }}">{{pin.user.fullName}}</a></small>
                     </p>
                     <p class="text-break">{{ pin.description}}</p>
 
@@ -51,25 +51,28 @@
                          {% endif %}
                     </div>
                   <div>
-                      <hr>
-                      {{ form_start(comForm) }}
-                      {{ form_widget(comForm) }}
-                      <button class="px-5 py-2">
-                          {{ button_label|default('Save') }}
-                      </button>
-                      {{ form_end(comForm) }}
-                      {#<form class="form-inline">
-                          <div class="mb-2">
-                          </div>
-                          <div class="mb-2">
-                              <button type="submit" value="{{ submitButtonText|default('Create com') }}" formnovalidate class="btn btn-primary"></button>
-                          </div>
-                      </form>#}
-                      <hr>
-                      <p class="text-muted">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab alias aliquam, architecto cupiditate dolor eos exercitationem !<br>
-                          <small>Submitted <time datetime="{{ pin.createdAt|date("Y-m-d H:i:s") }}">{{ pin.createdAt|ago}}</time> by <a href="">{{pin.user.fullName}}</a></small>
-                      </p>
+                      {% if  app.user%}
+                          <hr>
+
+                          {{ form_start(comForm) }}
+
+
+                          <div class="inline">
+                              {{ form_widget(comForm.com) }}
+                              <button class="btn btn-light inline ml-2">
+                                  {{ button_label|default('Comment') }}
+                              </button>
+                        </div>
+                          {{ form_end(comForm) }}
+                      {% endif %}
+                      {% for com in pin.pinComs %}
+                          <p class="mt-3">" {{ com.com }} "<br></p>
+
+                          <p class="text-muted mt-0 pt-0">
+                              <small>Submitted by <a href="{{ path('user_show', {id:pin.user.id}) }}">{{pin.user.fullName}}</a></small>
+                          </p>
+                          <hr>
+                      {% endfor %}
                   </div>
                </div>
           </article>

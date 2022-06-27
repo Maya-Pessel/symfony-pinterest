@@ -82,3 +82,7 @@ html, body{
 .margin{
     margin: auto 0;
 }
+
+.inline{
+    display: flex; justify-content: space-around;
+}
