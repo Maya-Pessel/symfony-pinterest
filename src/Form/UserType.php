@@ -18,8 +18,7 @@ class UserType extends AbstractType
             ->add('lastName')
             ->add('Update', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-outline-success'],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
